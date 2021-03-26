@@ -4,7 +4,7 @@
 1. download the collection and the environment files
 2. open your commmand line and go to the directory you saved the downloaded files
 3. run the following command
-> `newman run todoist_.postman_collection.json --environment dev.postman_environment.json -r html`
+> `newman run todoist.postman_collection.json --environment dev.postman_environment.json -r html`
 
 ## Check results
 A new folder named 'newman' is created, inside you'll find the output of the HTML reporter
