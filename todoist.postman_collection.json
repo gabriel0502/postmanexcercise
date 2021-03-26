@@ -1,0 +1,815 @@
+{
+	"info": {
+		"_postman_id": "177fc23b-7032-44b6-b78d-734eed544647",
+		"name": "todoist_tiempodev",
+		"description": "exercise for tiempo development ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "happy",
+			"item": [
+				{
+					"name": "get active tasks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate schema\", function () {\r",
+									"    schema = JSON.parse(pm.environment.get(\"schemaGetActiveTasksResponse\"));\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test('The creator of each task is ' + pm.environment.get(\"creatorid\"), function () {\r",
+									"    _.each(pm.response.json(), (item) => {\r",
+									"        pm.expect(item.creator).to.equal(parseInt(pm.environment.get(\"creatorid\")));\r",
+									"    })\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Value of content is 'Hire Gabriel'\", function () {\r",
+									"    pm.expect(pm.response.json().content).to.equal(\"Hire Gabriel\")\r",
+									"}); \r",
+									"\r",
+									"pm.test(\"Validate schema\", function () {\r",
+									"    schema = JSON.parse(pm.environment.get(\"schemaCreateTaskResponse\"));\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"var taskid = pm.response.json().id;\r",
+									"pm.environment.set('taskid', taskid)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Hire Gabriel\",\r\n    \"due_string\": \"next Monday at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get active task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate schema\", function () {\r",
+									"    schema = JSON.parse(pm.environment.get(\"schemaCreateTaskResponse\"));\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Value of id is \" + pm.environment.get(\"taskid\"), function (){\r",
+									"    pm.expect(pm.response.json().id).to.equal(pm.environment.get(\"taskid\"))\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"No content in response\", function () {\r",
+									"    pm.expect(pm.response.text().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"Buy Coffee after hiring Gabriel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change task status to 'complete'",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"No content in response\", function () {\r",
+									"    pm.expect(pm.response.text().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid/close",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid",
+								"close"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reopen a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"No content in response\", function () {\r",
+									"    pm.expect(pm.response.text().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid/reopen",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid",
+								"reopen"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"No content in response\", function () {\r",
+									"    pm.expect(pm.response.text().length).to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "invalid",
+			"item": [
+				{
+					"name": "get active tasks with no auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is 'Empty token'\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Empty token')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new task with empty content",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is 'Empty content'\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Empty content')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"\",\r\n    \"due_string\": \"next Monday at 12:00\",\r\n    \"due_lang\": \"en\",\r\n    \"priority\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get non-existent task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is 'Not Found'\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Not Found')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{bad_taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a task sending multiple due fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is multiple due fields error\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Only one of due_string, due_date or due_datetime can be set')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_string\": \"next Monday\",\r\n    \"due_date\": \"2020-03-29\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "{{bad_taskid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "close task sending letters as taskId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is Page not found error\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('404 page not found')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid/close",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid",
+								"close"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "abcdef"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reopen a task sending invalid taskid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is Invalid id\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Invalid id')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid/reopen",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid",
+								"reopen"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a task sending invalid taskid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than maxResponse time\", function () {\r",
+									"    pm.response.responseTime < pm.environment.get(\"maxResponseTimeMs\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is Invalid id\", function () {\r",
+									"    pm.expect(pm.response.text().trim()).to.equal('Invalid id')\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.todoist.com/rest/v1/tasks/:taskid",
+							"protocol": "https",
+							"host": [
+								"api",
+								"todoist",
+								"com"
+							],
+							"path": [
+								"rest",
+								"v1",
+								"tasks",
+								":taskid"
+							],
+							"variable": [
+								{
+									"key": "taskid",
+									"value": "0000000"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "Bearer 436944ba2842d7943b99b22f102269cc325fcfac",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
